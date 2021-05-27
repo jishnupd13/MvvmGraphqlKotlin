@@ -3,12 +3,17 @@ package com.app.mymainapp.injection
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
+import com.app.mymainapp.localdatabaseservice.AppLocalRoomDatabaseDao
+import com.app.mymainapp.localdatabaseservice.LocalRoomDatabase
 import com.app.mymainapp.preferences.PreferenceHandler
 import com.app.mymainapp.remoteservice.ApiHelper
 import com.app.mymainapp.remoteservice.ApiHelperImplementation
 import com.app.mymainapp.remoteservice.ApiService
 import com.app.mymainapp.utils.Constants.Companion.BASE_URL
+import com.app.mymainapp.utils.Constants.Companion.ROOM_DATABASE_NAME
 import com.app.mymainapp.utils.Constants.Companion.SHARED_PREFERENCE_KEY
+import com.app.mymainapp.utils.StylishToastyUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +29,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideAppContext(@ApplicationContext context:Context)=context
+
+
     @Provides
     fun provideBaseUrl() = BASE_URL
 
@@ -64,10 +75,33 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedEditor(sharedPreferences: SharedPreferences)=sharedPreferences.edit()
+    fun provideSharedEditor(sharedPreferences: SharedPreferences) = sharedPreferences.edit()
 
     @Singleton
     @Provides
-    fun providePreferenceHandler(sharedPreferences: SharedPreferences)=PreferenceHandler(sharedPreferences)
+    fun providePreferenceHandler(sharedPreferences: SharedPreferences) =
+        PreferenceHandler(sharedPreferences)
+
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext appContext: Context): LocalRoomDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            LocalRoomDatabase::class.java,
+            ROOM_DATABASE_NAME
+        ).build()
+    }
+
+
+    @Provides
+    fun provideAppLocalRoomDatabaseDao(appDatabase: LocalRoomDatabase): AppLocalRoomDatabaseDao {
+        return appDatabase.appLocalRoomDatabaseDao()
+    }
+
+    @Singleton
+    @Provides
+   fun provideStylishToastyUtils(@ApplicationContext context: Context)=StylishToastyUtils(context)
+
 
 }

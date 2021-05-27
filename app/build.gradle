@@ -7,6 +7,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlinx-serialization'
 
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -75,13 +76,6 @@ dependencies {
     // RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.2.0'
 
-    // Room
-    //implementation "androidx.room:room-runtime:$room_version"
-    //kapt "androidx.room:room-compiler:$room_version"
-    // optional - Kotlin Extensions and Coroutines support for Room
-    //implementation "androidx.room:room-ktx:$room_version"
-
-    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
@@ -114,4 +108,16 @@ dependencies {
 
     api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01'
 
+    //Room
+    implementation "androidx.room:room-runtime:2.3.0"
+    kapt "androidx.room:room-compiler:2.3.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation 'androidx.room:room-ktx:2.3.0'
+
+    //Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Stylish Toast
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
 }

@@ -1,28 +1,34 @@
 package com.app.mymainapp.ui
 
-import android.content.SharedPreferences
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.app.mymainapp.baseresult.Status
+import com.app.mymainapp.baseresult.BaseResult
 import com.app.mymainapp.databinding.ActivityMainBinding
 import com.app.mymainapp.listeners.OnItemClickListener
+import com.app.mymainapp.localdatabaseservice.entities.StudentEntity
 import com.app.mymainapp.models.TestApiResponseModel
 import com.app.mymainapp.preferences.PreferenceHandler
 import com.app.mymainapp.ui.adapters.TestAdapter
+import com.app.mymainapp.utils.StylishToastyUtils
 import com.app.mymainapp.utils.hide
 import com.app.mymainapp.utils.show
 import com.app.mymainapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     @Inject
-    lateinit var preferenceHandler:PreferenceHandler
+    lateinit var preferenceHandler: PreferenceHandler
+
+    @Inject
+    lateinit var stylishToastyUtils: StylishToastyUtils
 
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
@@ -34,7 +40,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        preferenceHandler.userToken="Hello world"
+        preferenceHandler.userToken = "Hello world"
+
+        stylishToastyUtils.showSuccessMessage(preferenceHandler.userToken)
 
 
 
@@ -44,9 +52,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         mainViewModel.res.observe(this, Observer {
 
             when (it.status) {
-                Status.SUCCESS -> {
+                BaseResult.Status.SUCCESS -> {
 
-                    Toast.makeText(applicationContext, preferenceHandler.userToken,Toast.LENGTH_SHORT).show()
+                   stylishToastyUtils.showSuccessMessage("success")
 
                     binding.appLoader.hide()
                     binding.testRecyclerView.show()
@@ -55,20 +63,54 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     }
                 }
 
-                Status.ERROR -> {
+                BaseResult.Status.ERROR -> {
                     binding.appLoader.hide()
                     binding.testRecyclerView.show()
+
+                    stylishToastyUtils.showErrorMessage("${it.message}")
+
+
                 }
 
-                Status.LOADING -> {
+                BaseResult.Status.LOADING -> {
                     binding.appLoader.show()
                     binding.testRecyclerView.hide()
+
+                    stylishToastyUtils.showInfoMessage("Loading...")
+
                 }
+            }
+
+        })
+
+
+        //For Room Insert Data
+        val studentEntity = StudentEntity(1, "Jishnu", "P Dileep", "12th", 20)
+        mainViewModel.InsertStudentData(studentEntity)
+
+        mainViewModel.insertStudentData.observe(this, Observer { rowId ->
+            Timber.e("Inserted %d", rowId)
+        })
+
+        //For Room Fetch Data
+        mainViewModel.GetAllStudentsData()
+        mainViewModel.GetAllStudentData.observe(this, Observer { studentList ->
+
+            studentList.forEach { item ->
+                Timber.tag("Details").e(
+                    "%d %s %s %d %s",
+                    item.studentId,
+                    item.fName,
+                    item.lName,
+                    item.age,
+                    item.standard
+                )
             }
 
         })
     }
 
+    @SuppressLint("LogNotTimber")
     override fun onItemClick(key: String, item: Any) {
         val testModel = item as TestApiResponseModel
 
@@ -94,6 +136,5 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
     }
-
 
 }
