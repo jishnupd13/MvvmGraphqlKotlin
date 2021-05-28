@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.mymainapp.R
 import com.app.mymainapp.databinding.ItemTestViewBinding
 import com.app.mymainapp.listeners.OnItemClickListener
+import com.app.mymainapp.models.Name
 import com.app.mymainapp.models.TestApiResponseModel
 
 
@@ -36,6 +37,10 @@ class TestAdapter(val onItemClickListener: OnItemClickListener) : RecyclerView.A
     }
 
     val differ = AsyncListDiffer(this, differCallback)
+
+    fun submitList(list: List<TestApiResponseModel>){
+        differ.submitList(list)
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestViewHolder {

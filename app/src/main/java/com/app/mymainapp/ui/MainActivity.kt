@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     binding.appLoader.hide()
                     binding.testRecyclerView.show()
                     it.data.let { testList ->
-                        testAdapter.differ.submitList(testList)
+                        testList?.let { it1 -> testAdapter.submitList(it1) }
                     }
                 }
 

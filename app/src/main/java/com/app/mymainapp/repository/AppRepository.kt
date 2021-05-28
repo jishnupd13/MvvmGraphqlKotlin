@@ -12,6 +12,7 @@ class AppRepository @Inject constructor(
 ) {
 
     suspend fun getPosts() = safeApiCall { apiHelper.getPosts() }
+    suspend fun getNestedPosts()= safeApiCall { apiHelper.getNestedPosts() }
 
     //for room DataBase
     suspend fun insertStudentData(student: StudentEntity) = appLocalRoomDatabaseDao.insert(student)
