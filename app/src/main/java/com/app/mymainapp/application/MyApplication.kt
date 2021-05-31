@@ -17,5 +17,3 @@ class MyApplication : Application() {
         }
     }
 }
-
-//https://jsonplaceholder.typicode.com/posts
