@@ -22,7 +22,6 @@ import com.app.mymainapp.utils.show
 import com.app.mymainapp.utils.showToast
 import com.app.mymainapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import javax.inject.Inject
@@ -127,8 +126,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         when (key) {
             "root" -> {
-               RxBus.publish(RxEvent.EventAddPerson("Root Person" +
-                       ""))
+                RxBus.publish(
+                    RxEvent.EventAddPerson(
+                        "Root Person" +
+                                ""
+                    )
+                )
             }
 
             "user" -> {
