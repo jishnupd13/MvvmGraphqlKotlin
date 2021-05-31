@@ -13,12 +13,17 @@ import com.app.mymainapp.listeners.OnItemClickListener
 import com.app.mymainapp.localdatabaseservice.entities.StudentEntity
 import com.app.mymainapp.models.TestApiResponseModel
 import com.app.mymainapp.preferences.PreferenceHandler
+import com.app.mymainapp.rxbus.RxBus
+import com.app.mymainapp.rxbus.RxEvent
 import com.app.mymainapp.ui.adapters.TestAdapter
 import com.app.mymainapp.utils.StylishToastyUtils
 import com.app.mymainapp.utils.hide
 import com.app.mymainapp.utils.show
+import com.app.mymainapp.utils.showToast
 import com.app.mymainapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -37,11 +42,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var testAdapter: TestAdapter
 
+    private lateinit var personDisposable: Disposable
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preferenceHandler.userToken = "Hello world"
         stylishToastyUtils.showSuccessMessage(preferenceHandler.userToken)
+
 
         testAdapter = TestAdapter(this)
         binding.testRecyclerView.adapter = testAdapter
@@ -105,6 +113,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             }
 
         })
+
+
+        //RxEventBus Observing
+        personDisposable = RxBus.listen(RxEvent.EventAddPerson::class.java).subscribe {
+            showToast(it.personName)
+        }
     }
 
     @SuppressLint("LogNotTimber")
@@ -113,7 +127,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         when (key) {
             "root" -> {
-                Toast.makeText(this, "root", Toast.LENGTH_SHORT).show()
+               RxBus.publish(RxEvent.EventAddPerson("Root Person" +
+                       ""))
             }
 
             "user" -> {
@@ -133,5 +148,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!personDisposable.isDisposed) personDisposable.dispose()
+    }
+
 
 }

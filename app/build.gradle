@@ -124,5 +124,11 @@ dependencies {
     //Stylish Toast
     implementation 'com.github.GrenderG:Toasty:1.5.0'
 
+    //view binding
     implementation 'com.github.yogacp:android-viewbinding:1.0.1'
+
+    //Rxjava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }
