@@ -2,6 +2,7 @@ package com.app.mymainapp.ui.fragmentactivity
 
 import android.os.Bundle
 import android.view.View
+import android.viewbinding.library.fragment.viewBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.app.mymainapp.R
@@ -18,7 +19,9 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class FirstFragment : Fragment(R.layout.fragment_first), View.OnClickListener, OnItemClickListener {
-    private lateinit var firstBinding: FragmentFirstBinding
+
+
+    private val firstBinding: FragmentFirstBinding by viewBinding()
     private val fragmentViewModel: FragmentViewModel by viewModels()
 
     private lateinit var testNestedAdapter: TestNestedAdapter
@@ -26,7 +29,6 @@ class FirstFragment : Fragment(R.layout.fragment_first), View.OnClickListener, O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        firstBinding = FragmentFirstBinding.bind(view)
         firstBinding.viewModel = fragmentViewModel
         firstBinding.listener = this
         testNestedAdapter = TestNestedAdapter(this)

@@ -2,6 +2,7 @@ package com.app.mymainapp.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.viewbinding.library.activity.viewBinding
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -30,21 +31,17 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     @Inject
     lateinit var stylishToastyUtils: StylishToastyUtils
 
-    private lateinit var binding: ActivityMainBinding
+
+    private val binding: ActivityMainBinding by viewBinding()
+
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var testAdapter: TestAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         preferenceHandler.userToken = "Hello world"
-
         stylishToastyUtils.showSuccessMessage(preferenceHandler.userToken)
-
-
 
         testAdapter = TestAdapter(this)
         binding.testRecyclerView.adapter = testAdapter
@@ -54,7 +51,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             when (it.status) {
                 BaseResult.Status.SUCCESS -> {
 
-                   stylishToastyUtils.showSuccessMessage("success")
+                    stylishToastyUtils.showSuccessMessage("success")
 
                     binding.appLoader.hide()
                     binding.testRecyclerView.show()

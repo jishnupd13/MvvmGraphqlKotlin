@@ -36,9 +36,11 @@ android {
         jvmTarget = '1.8'
     }
 
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        viewBinding true
     }
+
+    
 
     dataBinding {
         enabled = true
@@ -121,4 +123,6 @@ dependencies {
 
     //Stylish Toast
     implementation 'com.github.GrenderG:Toasty:1.5.0'
+
+    implementation 'com.github.yogacp:android-viewbinding:1.0.1'
 }
