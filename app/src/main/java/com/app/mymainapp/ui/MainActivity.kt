@@ -53,6 +53,27 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         testAdapter = TestAdapter(this)
         binding.testRecyclerView.adapter = testAdapter
 
+
+        mainViewModel.CreateUserLiveData.observe(this, Observer {
+
+            when (it.status) {
+                BaseResult.Status.SUCCESS -> {
+
+                    Timber.e("${it.message}")
+                }
+
+                BaseResult.Status.ERROR -> {
+                    Timber.e("${it.message}")
+                }
+
+                BaseResult.Status.LOADING -> {
+
+                }
+            }
+
+        })
+
+
         mainViewModel.res.observe(this, Observer {
 
             when (it.status) {

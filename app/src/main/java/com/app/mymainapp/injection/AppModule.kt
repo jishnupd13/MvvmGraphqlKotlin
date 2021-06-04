@@ -14,12 +14,17 @@ import com.app.mymainapp.utils.Constants.Companion.BASE_URL
 import com.app.mymainapp.utils.Constants.Companion.ROOM_DATABASE_NAME
 import com.app.mymainapp.utils.Constants.Companion.SHARED_PREFERENCE_KEY
 import com.app.mymainapp.utils.StylishToastyUtils
+import com.google.gson.Gson
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import de.hdodenhof.circleimageview.BuildConfig
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -40,22 +45,24 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
+    fun provideOkHttpClient():OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder()
+        return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .build()
-    } else {
-        OkHttpClient
-            .Builder()
             .build()
     }
 
+    @ExperimentalSerializationApi
     @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(
+            Json {
+                ignoreUnknownKeys = true
+                isLenient = true
+            }.asConverterFactory("application/json".toMediaType())
+        )
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()

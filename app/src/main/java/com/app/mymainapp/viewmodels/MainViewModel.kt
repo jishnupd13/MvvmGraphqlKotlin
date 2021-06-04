@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.app.mymainapp.baseresult.BaseResult
 import com.app.mymainapp.baseresult.ResultWrapper
 import com.app.mymainapp.localdatabaseservice.entities.StudentEntity
+import com.app.mymainapp.models.LoginRequest
+import com.app.mymainapp.models.LoginResponses
 import com.app.mymainapp.models.TestApiResponseModel
 import com.app.mymainapp.repository.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,9 +26,41 @@ class MainViewModel @Inject constructor(
     val res: LiveData<BaseResult<List<TestApiResponseModel>>>
         get() = _res
 
-    init {
+   /* init {
         getPosts()
     }
+*/
+
+    init {
+        getCreateUser(LoginRequest(userName = "amalkg","amal@gmail.com",1,1,"hh",1,"hhhh"))
+    }
+
+
+
+    private val _create_user=MutableLiveData<BaseResult<LoginResponses>>()
+    val CreateUserLiveData:LiveData<BaseResult<LoginResponses>>
+        get() = _create_user
+
+
+    private fun getCreateUser(request: LoginRequest?) = viewModelScope.launch {
+        when (val response = mainRepository.createUser(request!!)) {
+            is ResultWrapper.Success ->
+                _create_user.postValue(
+                    BaseResult.success(
+                        response.data
+                    )
+                )
+
+            is ResultWrapper.Failure ->
+                _create_user.postValue(
+                    BaseResult.error(
+                        response.message
+                    )
+                )
+
+        }
+    }
+
 
 
     private val _insert_student_data=MutableLiveData<Long>()
