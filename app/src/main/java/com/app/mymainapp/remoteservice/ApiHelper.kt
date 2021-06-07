@@ -1,14 +1,10 @@
 package com.app.mymainapp.remoteservice
 
-import com.app.mymainapp.models.LoginRequest
-import com.app.mymainapp.models.LoginResponses
-import com.app.mymainapp.models.TestApiNestedModel
 import com.app.mymainapp.models.TestApiResponseModel
 import retrofit2.Response
 
 interface ApiHelper {
     suspend fun getPosts(): Response<List<TestApiResponseModel>>
-    suspend fun getNestedPosts(): Response<List<TestApiNestedModel>>
-    suspend fun createUser(request: LoginRequest?):Response<LoginResponses>
+
 
 }

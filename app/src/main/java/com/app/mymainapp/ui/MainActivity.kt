@@ -54,24 +54,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         binding.testRecyclerView.adapter = testAdapter
 
 
-        mainViewModel.CreateUserLiveData.observe(this, Observer {
-
-            when (it.status) {
-                BaseResult.Status.SUCCESS -> {
-
-                    Timber.e("${it.message}")
-                }
-
-                BaseResult.Status.ERROR -> {
-                    Timber.e("${it.message}")
-                }
-
-                BaseResult.Status.LOADING -> {
-
-                }
-            }
-
-        })
+        mainViewModel.getPosts()
 
 
         mainViewModel.res.observe(this, Observer {
@@ -93,6 +76,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                     binding.testRecyclerView.show()
 
                     stylishToastyUtils.showErrorMessage("${it.message}")
+
+                    Timber.e("${it.message}")
 
 
                 }

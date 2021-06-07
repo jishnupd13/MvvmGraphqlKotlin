@@ -2,7 +2,9 @@ package com.app.mymainapp.models
 
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TestApiResponseModel(
     @SerializedName("body")
     val body: String?,
