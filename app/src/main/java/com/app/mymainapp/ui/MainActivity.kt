@@ -7,11 +7,13 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.app.mymainapp.baseresult.BaseResult
 import com.app.mymainapp.databinding.ActivityMainBinding
 import com.app.mymainapp.listeners.OnItemClickListener
 import com.app.mymainapp.localdatabaseservice.entities.StudentEntity
 import com.app.mymainapp.models.TestApiResponseModel
+import com.app.mymainapp.networkconnectivity.NetworkConnectivityManager
 import com.app.mymainapp.preferences.PreferenceHandler
 import com.app.mymainapp.rxbus.RxBus
 import com.app.mymainapp.rxbus.RxEvent
@@ -23,6 +25,7 @@ import com.app.mymainapp.utils.showToast
 import com.app.mymainapp.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -48,6 +51,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         super.onCreate(savedInstanceState)
         preferenceHandler.userToken = "Hello world"
         stylishToastyUtils.showSuccessMessage(preferenceHandler.userToken)
+
+
+
+
 
 
         testAdapter = TestAdapter(this)

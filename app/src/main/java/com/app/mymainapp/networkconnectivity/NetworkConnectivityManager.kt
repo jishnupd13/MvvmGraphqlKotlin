@@ -12,7 +12,7 @@ import java.net.URL
 
 object NetworkConnectivityManager {
 
-    private fun hasNetworkAvailable(context: Context): Boolean {
+    private  fun hasNetworkAvailable(context: Context): Boolean {
         var result = false
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

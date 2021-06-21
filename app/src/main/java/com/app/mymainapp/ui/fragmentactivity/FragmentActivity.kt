@@ -5,9 +5,15 @@ import android.view.View
 import android.viewbinding.library.activity.viewBinding
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.app.mymainapp.databinding.ActivityFragmentBinding
+import com.app.mymainapp.networkconnectivity.NetworkConnectivityManager
 import com.app.mymainapp.viewmodels.FragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 
 @AndroidEntryPoint
 class FragmentActivity : AppCompatActivity(), View.OnClickListener {
@@ -20,6 +26,22 @@ class FragmentActivity : AppCompatActivity(), View.OnClickListener {
         fragmentBinding.viewModel = fragmentViewModel
         fragmentBinding.listener = this
         setUpFragment()
+
+
+        runBlocking {
+            val isInternetAvailable = lifecycleScope.async(Dispatchers.IO) {
+                NetworkConnectivityManager.hasInternetConnected(this@FragmentActivity)
+            }
+            val networkCheckingStatus = isInternetAvailable.await()
+
+            if (networkCheckingStatus) {
+                Timber.e("network available")
+            } else {
+                Timber.e("network not available")
+            }
+        }
+
+
     }
 
     private fun setUpFragment() {
