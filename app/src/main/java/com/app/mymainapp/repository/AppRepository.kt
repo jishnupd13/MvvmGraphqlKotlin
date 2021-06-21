@@ -19,5 +19,4 @@ class AppRepository @Inject constructor(
     suspend fun insertStudentData(student: StudentEntity) = appLocalRoomDatabaseDao.insert(student)
     suspend fun fetchStudents() = appLocalRoomDatabaseDao.fetch()
 
-    suspend fun createUser(request: LoginRequest)= safeApiCall {  apiHelper.createUser(request)}
 }
