@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.app.mymainapp.LaunchListQuery.Launch" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_rocket"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:id="@+id/text_mission_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/img_rocket"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:textColor="@color/black"
+            android:text="@{item.mission.name}"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/text_site_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/text_mission_name"
+            app:layout_constraintEnd_toEndOf="@+id/text_mission_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_mission_name"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/open_sans_regular"
+            android:textSize="14sp"
+            android:text="@{item.site}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

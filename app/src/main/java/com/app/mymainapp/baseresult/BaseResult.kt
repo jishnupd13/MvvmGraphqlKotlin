@@ -1,5 +1,9 @@
 package com.app.mymainapp.baseresult
 
+import com.apollographql.apollo.ApolloCall
+import com.apollographql.apollo.coroutines.await
+import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
@@ -66,6 +70,35 @@ suspend fun <T> safeApiCall(
                 )
                 else -> ResultWrapper.Failure("${throwable.message}", ErrorType.UNKNOWN)
             }
+        }
+    }
+}
+
+
+suspend fun <T> safeApolloCall(
+    apiCall: suspend () -> ApolloCall<T>
+): ResultWrapper<T> {
+    try {
+        val response = apiCall.invoke().await()
+        return if (response.hasErrors()) {
+            ResultWrapper.Failure(
+                response.errors?.getOrNull(0)?.message ?: "",
+                ErrorType.UNKNOWN
+            )
+        } else {
+            ResultWrapper.Success(response.data!!)
+        }
+    } catch (e: ApolloException) {
+        // handle protocol errors
+        return when (e) {
+            is ApolloNetworkException -> ResultWrapper.Failure(
+                "No internet",
+                ErrorType.NETWORK_ERROR
+            )
+            else -> ResultWrapper.Failure(
+                e.message ?: "",
+                ErrorType.UNKNOWN
+            )
         }
     }
 }

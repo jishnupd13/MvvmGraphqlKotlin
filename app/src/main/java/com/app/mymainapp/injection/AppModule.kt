@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
+import com.apollographql.apollo.ApolloClient
 import com.app.mymainapp.localdatabaseservice.AppLocalRoomDatabaseDao
 import com.app.mymainapp.localdatabaseservice.LocalRoomDatabase
 import com.app.mymainapp.preferences.PreferenceHandler
@@ -11,6 +12,7 @@ import com.app.mymainapp.remoteservice.ApiHelper
 import com.app.mymainapp.remoteservice.ApiHelperImplementation
 import com.app.mymainapp.remoteservice.ApiService
 import com.app.mymainapp.utils.Constants.Companion.BASE_URL
+import com.app.mymainapp.utils.Constants.Companion.GRAPHQL
 import com.app.mymainapp.utils.Constants.Companion.ROOM_DATABASE_NAME
 import com.app.mymainapp.utils.Constants.Companion.SHARED_PREFERENCE_KEY
 import com.app.mymainapp.utils.StylishToastyUtils
@@ -26,6 +28,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -38,7 +41,12 @@ object AppModule {
 
 
     @Provides
-    fun provideBaseUrl() = BASE_URL
+    @Named("RetrofitBaseUrl")
+    fun provideRetrofitBaseUrl() = BASE_URL
+
+    @Provides
+    @Named("GraphQlBaseUrl")
+    fun provideGraphQlBaseUrl() = GRAPHQL
 
     @Singleton
     @Provides
@@ -53,7 +61,10 @@ object AppModule {
     @ExperimentalSerializationApi
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit = Retrofit.Builder()
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        @Named("RetrofitBaseUrl") BASE_URL: String
+    ): Retrofit = Retrofit.Builder()
         .addConverterFactory(
             Json {
                 ignoreUnknownKeys = true
@@ -108,5 +119,11 @@ object AppModule {
     fun provideStylishToastyUtils(@ApplicationContext context: Context) =
         StylishToastyUtils(context)
 
-
+    @Singleton
+    @Provides
+    fun providesApolloClient(@Named("GraphQlBaseUrl") graphQl: String,  okHttpClient: OkHttpClient) =
+        ApolloClient.builder()
+            .serverUrl(graphQl)
+            .okHttpClient(okHttpClient)
+            .build()
 }

@@ -7,5 +7,6 @@ class Constants {
         const val SHARED_PREFERENCE_KEY="MyMainApp"
         const val ROOM_DATABASE_NAME="app_local_database"
         const val REACHABILITY_SERVER="https://www.google.com"
+        const val GRAPHQL = "https://apollo-fullstack-tutorial.herokuapp.com/graphql"
     }
 }
